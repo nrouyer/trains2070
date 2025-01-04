@@ -1,0 +1,106 @@
+{
+  "title": "France train transportation network 2070",
+  "version": "2.4",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {}
+  },
+  "pages": [
+    {
+      "title": "Table",
+      "reports": [
+        {
+          "id": "344a25d9-8d9a-4c58-8cb6-92129ce97983",
+          "title": "Train frequencies (2070)",
+          "query": "MATCH path=(departure:City)-[to:TO]->(arrival:City)\nRETURN departure.name AS departure, arrival.name AS arrival, to.trainsPerDay AS trainsPerDay\nORDER BY trainsPerDay DESC LIMIT 14\n\n\n",
+          "width": 7,
+          "height": 12,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "id": "7d9077de-b387-4e63-b991-46e70b9a442f",
+          "title": "Train frequencies (2070)",
+          "query": "MATCH path=(departure:City)-[to:TO]->(arrival:City)\nRETURN departure.name AS departure, arrival.name AS arrival, to.trainsPerDay AS trainsPerDay\nORDER BY trainsPerDay DESC SKIP 15 LIMIT 14\n\n\n",
+          "width": 7,
+          "height": 12,
+          "x": 7,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "id": "4a52e614-d990-4fed-91a8-b42bf23055c1",
+          "title": "Train frequencies (2070)",
+          "query": "MATCH path=(departure:City)-[to:TO]->(arrival:City)\nRETURN departure.name AS departure, arrival.name AS arrival, to.trainsPerDay AS trainsPerDay\nORDER BY trainsPerDay DESC SKIP 30 LIMIT 14\n\n\n",
+          "width": 7,
+          "height": 12,
+          "x": 14,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Map",
+      "reports": [
+        {
+          "id": "09a566bc-aba1-4fc2-b791-8daf797ce190",
+          "title": "Trains per Day (logarithmic scale)",
+          "query": "MATCH path=(departure:City)-[to:TO]->(arrival:City)\nRETURN path\n\n\n",
+          "width": 23,
+          "height": 8,
+          "x": 0,
+          "y": 0,
+          "type": "map",
+          "selection": {
+            "City": "name"
+          },
+          "settings": {
+            "relWidthProp": "logTrainsPerDay",
+            "defaultNodeSize": "small",
+            "layerType": "markers",
+            "nodeColorScheme": "paired"
+          },
+          "schema": [
+            [
+              "City",
+              "postalCode",
+              "latitude",
+              "name",
+              "longitude",
+              "cityPoint"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Flows",
+      "reports": []
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "active": true,
+    "activeReducers": [],
+    "advanced-charts": {
+      "active": true
+    },
+    "styling": {
+      "active": true
+    },
+    "actions": {
+      "active": true
+    }
+  },
+  "uuid": "b7fbdfc9-97c6-448d-8fa8-6cce9b13165e"
+}

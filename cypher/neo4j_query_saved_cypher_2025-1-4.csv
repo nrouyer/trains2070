@@ -1,0 +1,40 @@
+name,description,query,id,parentId,isFolder
+Trains,,,0,,true
+Discover dataset,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+RETURN row LIMIT 10",1,0,false
+Create constraint on city name,,CREATE CONSTRAINT city_name IF NOT EXISTS FOR (c:City) REQUIRE c.name IS UNIQUE;,2,0,false
+Create departure cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+MERGE (c:City {name: row.departure_city})
+  ON CREATE SET 
+    c.postalCode = row.departure_postal_code,
+    c.latitude = row.departure_latitude,
+    c.longitude = row.departure_longitude
+  ON MATCH SET 
+    c.postalCode = row.departure_postal_code,
+    c.latitude = row.departure_latitude,
+    c.longitude = row.departure_longitude
+RETURN count(c);",3,0,false
+Create arrival cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+MERGE (c:City {name: row.arrival_city})
+  ON CREATE SET 
+    c.postalCode = row.arrival_postal_code,
+    c.latitude = row.arrival_latitude,
+    c.longitude = row.arrival_longitude
+  ON MATCH SET 
+    c.postalCode = row.arrival_postal_code,
+    c.latitude = row.arrival_latitude,
+    c.longitude = row.arrival_longitude
+RETURN count(c);",4,0,false
+Create TO relationships bw cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+MATCH (departure:City {name: row.departure_city})
+MATCH (arrival:City {name: row.arrival_city})
+MERGE (departure)-[to:TO]->(arrival)
+  ON CREATE SET to.trainsPerDay = toInteger(row.trains_per_day)
+  ON MATCH SET to.trainsPerDay = toInteger(row.trains_per_day)
+RETURN count(to) AS nbRelations;",5,0,false
+Refactor geo points for cities,,"MATCH (c:City)
+WITH c, point({longitude: toFloat(c.longitude), latitude: toFloat(c.latitude)}) AS cityPoint
+SET c.cityPoint = cityPoint;",6,0,false
+Create point index for city geo point,,CREATE POINT INDEX city_point FOR (c:City) ON (c.cityPoint);,7,0,false
+Create logarithmic property for TO relationship,,"MATCH (departure:City)-[to:TO]->(arrival:City)
+SET to.logTrainsPerDay = log(to.trainsPerDay);",8,0,false
