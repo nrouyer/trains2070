@@ -1,9 +1,9 @@
 name,description,query,id,parentId,isFolder
 Trains,,,0,,true
-Discover dataset,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+Discover dataset,,"LOAD CSV WITH HEADERS FROM ""https://raw.githubusercontent.com/nrouyer/trains2070/refs/heads/main/data/french_train_network_2070.csv"" AS row
 RETURN row LIMIT 10",1,0,false
 Create constraint on city name,,CREATE CONSTRAINT city_name IF NOT EXISTS FOR (c:City) REQUIRE c.name IS UNIQUE;,2,0,false
-Create departure cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+Create departure cities,,"LOAD CSV WITH HEADERS FROM ""https://raw.githubusercontent.com/nrouyer/trains2070/refs/heads/main/data/french_train_network_2070.csv"" AS row
 MERGE (c:City {name: row.departure_city})
   ON CREATE SET 
     c.postalCode = row.departure_postal_code,
@@ -14,7 +14,7 @@ MERGE (c:City {name: row.departure_city})
     c.latitude = row.departure_latitude,
     c.longitude = row.departure_longitude
 RETURN count(c);",3,0,false
-Create arrival cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+Create arrival cities,,"LOAD CSV WITH HEADERS FROM ""https://raw.githubusercontent.com/nrouyer/trains2070/refs/heads/main/data/french_train_network_2070.csv"" AS row
 MERGE (c:City {name: row.arrival_city})
   ON CREATE SET 
     c.postalCode = row.arrival_postal_code,
@@ -25,7 +25,7 @@ MERGE (c:City {name: row.arrival_city})
     c.latitude = row.arrival_latitude,
     c.longitude = row.arrival_longitude
 RETURN count(c);",4,0,false
-Create TO relationships bw cities,,"LOAD CSV WITH HEADERS FROM ""file:///french_train_network_2070.csv"" AS row
+Create TO relationships bw cities,,"LOAD CSV WITH HEADERS FROM ""https://raw.githubusercontent.com/nrouyer/trains2070/refs/heads/main/data/french_train_network_2070.csv"" AS row
 MATCH (departure:City {name: row.departure_city})
 MATCH (arrival:City {name: row.arrival_city})
 MERGE (departure)-[to:TO]->(arrival)
